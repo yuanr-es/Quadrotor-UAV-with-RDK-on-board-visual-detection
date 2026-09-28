@@ -1,0 +1,72 @@
+<template>
+	<view class="cp-page">
+		<view class="cp-sticks">
+			<joystick label="油门/偏航" channel-a="油门" channel-b="偏航" @change="onLeft" />
+			<joystick label="俯仰/横滚" channel-a="俯仰" channel-b="横滚" @change="onRight" />
+		</view>
+
+		<view class="cp-cmds">
+			<view
+				v-for="cmd in commands"
+				:key="cmd"
+				class="cp-cmd"
+				:class="cmd == '急停' ? 'cp-cmd-stop' : ''"
+				@tap="onCommand(cmd)"
+			>
+				<text class="cp-cmd-text">{{ cmd }}</text>
+			</view>
+		</view>
+
+		<text class="cp-hint">高风险命令需防误触、状态约束与 ACK，待链路接入后实现（§8.3）</text>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const commands = ['起飞', '降落', '返航', '急停']
+
+	const onLeft = (pos: any) => console.log('left', pos)
+	const onRight = (pos: any) => console.log('right', pos)
+
+	const onCommand = (cmd: string) => {
+		uni.showToast({ title: `${cmd}：命令链路待接入`, icon: 'none' })
+	}
+</script>
+
+<style>
+	.cp-page {
+		flex: 1;
+		flex-direction: column;
+		background-color: #0f0f1a;
+		padding: 10px;
+	}
+
+	.cp-sticks {
+		flex-direction: row;
+		justify-content: space-around;
+		margin-bottom: 20px;
+	}
+
+	.cp-cmds {
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.cp-cmd {
+		flex: 1;
+		margin-left: 4px;
+		margin-right: 4px;
+		padding: 12px;
+		background-color: #1a1a2e;
+		border-radius: 6px;
+		align-items: center;
+	}
+
+	.cp-cmd-stop { background-color: #ff3860; }
+	.cp-cmd-text { font-size: 13px; color: #e0e0e0; font-weight: bold; }
+
+	.cp-hint {
+		font-size: 10px;
+		color: #555555;
+		margin-top: 16px;
+	}
+</style>

@@ -1,0 +1,72 @@
+<template>
+	<view class="ab-page">
+		<text class="ab-logo">无人机控制器</text>
+		<text class="ab-version">版本 {{ appVersion }}（uni-app x 空壳）</text>
+
+		<view class="ab-section">
+			<text class="ab-title">技术路线</text>
+			<text class="ab-text">uni-app x + UTS 跨平台接口；Android 使用 UTS 原生组件承载 UVC 视频，HarmonyOS 使用 ArkTS 原生嵌入组件。</text>
+		</view>
+
+		<view class="ab-section">
+			<text class="ab-title">当前进度</text>
+			<text class="ab-text">已完成：工程骨架、视频会话状态机、遥测 parser/store、坐标转换、诊断框架。</text>
+			<text class="ab-text">待接入：USB/UVC 视频、USB 遥测、BLE 控制（需真实硬件与协议）。</text>
+		</view>
+
+		<view class="ab-section">
+			<text class="ab-title">参考文档</text>
+			<text class="ab-link" @tap="openDoc">docs/build-and-run.md</text>
+			<text class="ab-link" @tap="openDoc">docs/adr/ADR-001-tech-route.md</text>
+			<text class="ab-link" @tap="openDoc">TODOList.md</text>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const appVersion = ref('1.0.0')
+
+	const openDoc = () => {
+		uni.showToast({ title: '文档在工程 docs/ 目录查看', icon: 'none' })
+	}
+</script>
+
+<style>
+	.ab-page {
+		flex: 1;
+		flex-direction: column;
+		background-color: #0f0f1a;
+		padding: 16px;
+	}
+
+	.ab-logo {
+		font-size: 22px;
+		color: #e0e0e0;
+		font-weight: bold;
+		margin-bottom: 4px;
+	}
+
+	.ab-version {
+		font-size: 12px;
+		color: #00d4ff;
+		margin-bottom: 16px;
+	}
+
+	.ab-section {
+		background-color: #1a1a2e;
+		border-radius: 6px;
+		padding: 12px;
+		margin-bottom: 10px;
+		flex-direction: column;
+	}
+
+	.ab-title {
+		font-size: 14px;
+		color: #00d4ff;
+		font-weight: bold;
+		margin-bottom: 6px;
+	}
+
+	.ab-text { font-size: 12px; color: #aaaaaa; margin-bottom: 4px; }
+	.ab-link { font-size: 12px; color: #00d4ff; margin-bottom: 4px; }
+</style>

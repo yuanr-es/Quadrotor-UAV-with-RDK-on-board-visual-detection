@@ -1,0 +1,192 @@
+<template>
+	<view class="vo-panel">
+		<view
+			id="vo-box"
+			class="vo-box"
+			@touchstart="onStart"
+			@touchmove="onMove"
+			@touchend="onEnd"
+			@touchcancel="onEnd"
+		>
+			<view v-if="status == 'playing'" class="vo-live">
+				<text class="vo-live-text">UVC 预览中（原生组件待接入）</text>
+			</view>
+			<view v-else class="vo-placeholder">
+				<text class="vo-icon">[ 视频画面 ]</text>
+				<text class="vo-title">{{ statusText }}</text>
+				<text class="vo-sub">USB UVC 原生组件待接入（utssdk/app-android）</text>
+			</view>
+
+			<view v-if="drawing" class="vo-rect" :style="rectStyle"></view>
+
+			<view class="vo-osd">
+				<text v-if="isRecording" class="vo-rec">REC</text>
+				<text class="vo-res">{{ resolution }} · {{ fps }}fps</text>
+			</view>
+
+			<view v-if="!hasRect && !drawing" class="vo-hint">
+				<text class="vo-hint-text">滑动画面框选目标</text>
+			</view>
+		</view>
+		<view v-if="hasRect" class="vo-coord">
+			<text class="vo-coord-text">框选: X {{ lastX }} Y {{ lastY }} W {{ lastW }} H {{ lastH }}</text>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		status: { type: String, default: 'absent' },
+		resolution: { type: String, default: '--' },
+		fps: { type: String, default: '--' },
+		isRecording: { type: Boolean, default: false }
+	})
+
+	const emit = defineEmits(['track-rect'])
+
+	const drawing = ref(false)
+	const hasRect = ref(false)
+	const startX = ref(0)
+	const startY = ref(0)
+	const rectX = ref(0)
+	const rectY = ref(0)
+	const rectW = ref(0)
+	const rectH = ref(0)
+	const lastX = ref(0)
+	const lastY = ref(0)
+	const lastW = ref(0)
+	const lastH = ref(0)
+	const boxLeft = ref(0)
+	const boxTop = ref(0)
+
+	const statusText = computed((): string => {
+		if (props.status == 'absent') return '未插入设备'
+		if (props.status == 'permissionPending') return '等待 USB 授权'
+		if (props.status == 'permissionDenied') return '授权被拒绝'
+		if (props.status == 'unsupported') return '设备不支持'
+		if (props.status == 'opening') return '正在打开'
+		if (props.status == 'streaming') return '播放中'
+		if (props.status == 'stalled') return '断流'
+		if (props.status == 'detached') return '设备已拔出'
+		return '等待视频信号接入'
+	})
+
+	const rectStyle = computed((): string => {
+		return `left:${rectX.value}px;top:${rectY.value}px;width:${rectW.value}px;height:${rectH.value}px;`
+	})
+
+	onReady(() => {
+		uni.createSelectorQuery().select('#vo-box').boundingClientRect((res: any) => {
+			if (res != null) {
+				boxLeft.value = res.left as number
+				boxTop.value = res.top as number
+			}
+		}).exec()
+	})
+
+	const onStart = (e: any) => {
+		const t = e.touches[0]
+		if (t == null) return
+		drawing.value = true
+		hasRect.value = false
+		startX.value = t.clientX - boxLeft.value
+		startY.value = t.clientY - boxTop.value
+		rectX.value = startX.value
+		rectY.value = startY.value
+		rectW.value = 0
+		rectH.value = 0
+	}
+
+	const onMove = (e: any) => {
+		if (!drawing.value) return
+		const t = e.touches[0]
+		if (t == null) return
+		const cx = t.clientX - boxLeft.value
+		const cy = t.clientY - boxTop.value
+		const left = Math.min(startX.value, cx)
+		const top = Math.min(startY.value, cy)
+		const right = Math.max(startX.value, cx)
+		const bottom = Math.max(startY.value, cy)
+		rectX.value = left
+		rectY.value = top
+		rectW.value = right - left
+		rectH.value = bottom - top
+	}
+
+	const onEnd = () => {
+		if (!drawing.value) return
+		drawing.value = false
+		if (rectW.value < 20 || rectH.value < 20) {
+			rectW.value = 0
+			rectH.value = 0
+			return
+		}
+		hasRect.value = true
+		lastX.value = Math.round(rectX.value)
+		lastY.value = Math.round(rectY.value)
+		lastW.value = Math.round(rectW.value)
+		lastH.value = Math.round(rectH.value)
+		emit('track-rect', {
+			x: lastX.value,
+			y: lastY.value,
+			width: lastW.value,
+			height: lastH.value
+		})
+	}
+</script>
+
+<style>
+	.vo-panel {
+		flex: 1;
+		flex-direction: column;
+		background-color: #0a0a14;
+		padding: 4px;
+	}
+
+	.vo-box {
+		flex: 1;
+		background-color: #111122;
+		border-radius: 6px;
+		border-width: 1px;
+		border-style: solid;
+		border-color: #2a2a4a;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.vo-placeholder { flex-direction: column; align-items: center; }
+	.vo-live { flex-direction: column; align-items: center; justify-content: center; }
+	.vo-live-text { font-size: 12px; color: #23d160; }
+
+	.vo-icon { font-size: 16px; color: #00d4ff; margin-bottom: 8px; }
+	.vo-title { font-size: 15px; color: #666666; margin-bottom: 6px; }
+	.vo-sub { font-size: 11px; color: #444444; }
+
+	.vo-rect {
+		position: absolute;
+		border-width: 2px;
+		border-style: solid;
+		border-color: #00d4ff;
+		background-color: rgba(0, 212, 255, 0.15);
+	}
+
+	.vo-osd {
+		position: absolute;
+		left: 8px;
+		top: 8px;
+		flex-direction: row;
+	}
+
+	.vo-rec { font-size: 10px; color: #ff3860; margin-right: 8px; }
+	.vo-res { font-size: 10px; color: #ffffff; }
+
+	.vo-hint { position: absolute; bottom: 8px; }
+	.vo-hint-text { font-size: 10px; color: rgba(255, 255, 255, 0.35); }
+
+	.vo-coord {
+		height: 22px;
+		align-items: center;
+		justify-content: center;
+	}
+	.vo-coord-text { font-size: 11px; color: #00d4ff; }
+</style>

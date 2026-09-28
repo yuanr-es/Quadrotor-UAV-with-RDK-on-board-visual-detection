@@ -1,0 +1,119 @@
+/**
+ * Android 平台 USB UVC 适配器 —— 实现骨架
+ *
+ * 状态：**未实现**。此文件仅提供接口落地结构与实施指引，
+ * 所有方法在接入真实 USB Host / UVC 前必须显式抛错，
+ * 不得返回假数据（参见 TODOList.md §17「明确禁止的伪完成标准」）。
+ *
+ * TODO(§5.2) UsbManager 枚举 + USB_DEVICE_ATTACHED + device_filter.xml
+ * TODO(§5.2) requestPermission(PendingIntent) + attach/detach/permission 广播
+ * TODO(§5.3) VideoControl/VideoStreaming 接口识别 + Probe/Commit + alternate setting
+ * TODO(§5.4) MJPEG/H.264/H.265 解码 + Surface/TextureView 原生组件
+ * TODO(§5.5) 状态机接入 + 拔出释放 + 重连退避
+ *
+ * 注意：原始视频帧不得逐帧跨 JS/UTS 桥传输，应在原生层直接渲染到 Surface。
+ */
+
+import {
+  AdapterError,
+  AttachedEvent,
+  ClosedEvent,
+  DetachedEvent,
+  ErrorEvent,
+  OpenedEvent,
+  PermissionResultEvent,
+  StatsEvent,
+  StreamStartedEvent,
+  UsbVideoAdapter,
+  UsbVideoDevice,
+  VideoCapability,
+  VideoConfig,
+  VideoStats
+} from '../interface.uts'
+
+function notImplemented(method : string) : Error {
+  return new Error(
+    `[usb-uvc-video:android] ${method} 尚未实现。` +
+    `请按 TODOList.md §5 完成 Android USB/UVC 原生实现后再启用。`
+  )
+}
+
+export class AndroidUsbVideoAdapter implements UsbVideoAdapter {
+  private nextSessionId : number = 1
+
+  initialize() : Promise<void> {
+    return Promise.reject(notImplemented('initialize'))
+  }
+
+  listDevices() : Promise<UsbVideoDevice[]> {
+    // TODO(§5.2): usbManager.getDeviceList().values -> UsbVideoDevice[]
+    return Promise.reject(notImplemented('listDevices'))
+  }
+
+  requestPermission(deviceId : string) : Promise<boolean> {
+    // TODO(§5.2): usbManager.requestPermission(usbDevice, pendingIntent)
+    // 注意：不使用伪造的 android.permission.USB_PERMISSION。
+    return Promise.reject(notImplemented('requestPermission'))
+  }
+
+  getCapability(deviceId : string) : Promise<VideoCapability> {
+    // TODO(§5.3): 读取 VideoControl/VideoStreaming 描述符枚举真实能力
+    return Promise.reject(notImplemented('getCapability'))
+  }
+
+  open(deviceId : string, config : VideoConfig) : Promise<number> {
+    // TODO(§5.3): openDevice -> claimInterface -> setInterface(alternate) -> Probe/Commit
+    return Promise.reject(notImplemented('open'))
+  }
+
+  startPreview(sessionId : number) : Promise<void> {
+    // TODO(§5.4): 启动采集线程 + 解码 + 提交到 Surface
+    return Promise.reject(notImplemented('startPreview'))
+  }
+
+  stopPreview(sessionId : number) : Promise<void> {
+    return Promise.reject(notImplemented('stopPreview'))
+  }
+
+  close(sessionId : number) : Promise<void> {
+    // TODO(§5.5): 幂等释放 interface/connection/thread/buffer
+    return Promise.reject(notImplemented('close'))
+  }
+
+  getStats(sessionId : number) : VideoStats | null {
+    return null
+  }
+
+  onAttached(listener : (e : AttachedEvent) => void) : () => void {
+    return () => {}
+  }
+  onDetached(listener : (e : DetachedEvent) => void) : () => void {
+    return () => {}
+  }
+  onPermissionResult(listener : (e : PermissionResultEvent) => void) : () => void {
+    return () => {}
+  }
+  onOpened(listener : (e : OpenedEvent) => void) : () => void {
+    return () => {}
+  }
+  onStreamStarted(listener : (e : StreamStartedEvent) => void) : () => void {
+    return () => {}
+  }
+  onStats(listener : (e : StatsEvent) => void) : () => void {
+    return () => {}
+  }
+  onError(listener : (e : ErrorEvent) => void) : () => void {
+    return () => {}
+  }
+  onClosed(listener : (e : ClosedEvent) => void) : () => void {
+    return () => {}
+  }
+
+  release() : Promise<void> {
+    return Promise.resolve()
+  }
+}
+
+export function createUsbVideoAdapter() : UsbVideoAdapter {
+  return new AndroidUsbVideoAdapter()
+}

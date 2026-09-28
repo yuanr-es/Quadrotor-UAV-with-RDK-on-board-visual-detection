@@ -1,0 +1,87 @@
+<template>
+	<view class="dg-page">
+		<view class="dg-section">
+			<text class="dg-title">运行环境</text>
+			<view class="dg-row"><text class="dg-k">平台</text><text class="dg-v">{{ platform }}</text></view>
+			<view class="dg-row"><text class="dg-k">机型</text><text class="dg-v">{{ model }}</text></view>
+			<view class="dg-row"><text class="dg-k">系统</text><text class="dg-v">{{ system }}</text></view>
+			<view class="dg-row"><text class="dg-k">App 版本</text><text class="dg-v">{{ appVersion }}</text></view>
+		</view>
+
+		<view class="dg-section">
+			<text class="dg-title">链路计数</text>
+			<view class="dg-row"><text class="dg-k">USB 视频</text><text class="dg-v">--</text></view>
+			<view class="dg-row"><text class="dg-k">USB 遥测</text><text class="dg-v">--</text></view>
+			<view class="dg-row"><text class="dg-k">BLE 控制</text><text class="dg-v">--</text></view>
+			<view class="dg-row"><text class="dg-k">解析错误</text><text class="dg-v">--</text></view>
+			<view class="dg-row"><text class="dg-k">丢帧</text><text class="dg-v">--</text></view>
+		</view>
+
+		<view class="dg-section">
+			<text class="dg-title">日志</text>
+			<text class="dg-empty">日志服务待接入（services/diagnostics 的 UTS 移植）</text>
+			<view class="dg-btn" @tap="exportLog"><text class="dg-btn-text">导出 / 复制</text></view>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const platform = ref('--')
+	const model = ref('--')
+	const system = ref('--')
+	const appVersion = ref('1.0.0')
+
+	onLoad(() => {
+		const info = uni.getSystemInfoSync()
+		platform.value = info.platform
+		model.value = info.model
+		system.value = info.system
+	})
+
+	const exportLog = () => {
+		uni.showToast({ title: '日志服务待接入', icon: 'none' })
+	}
+</script>
+
+<style>
+	.dg-page {
+		flex: 1;
+		flex-direction: column;
+		background-color: #0f0f1a;
+		padding: 10px;
+	}
+
+	.dg-section {
+		background-color: #1a1a2e;
+		border-radius: 6px;
+		padding: 12px;
+		margin-bottom: 10px;
+		flex-direction: column;
+	}
+
+	.dg-title {
+		font-size: 14px;
+		color: #00d4ff;
+		font-weight: bold;
+		margin-bottom: 8px;
+	}
+
+	.dg-row {
+		flex-direction: row;
+		justify-content: space-between;
+		margin-bottom: 5px;
+	}
+
+	.dg-k { font-size: 12px; color: #888888; }
+	.dg-v { font-size: 12px; color: #e0e0e0; }
+
+	.dg-empty { font-size: 11px; color: #555555; margin-bottom: 10px; }
+
+	.dg-btn {
+		background-color: #00d4ff;
+		border-radius: 6px;
+		padding: 8px;
+		align-items: center;
+	}
+	.dg-btn-text { font-size: 12px; color: #0f0f1a; font-weight: bold; }
+</style>

@@ -1,0 +1,64 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "无人机控制器",
+				"navigationBarBackgroundColor": "#1a1a2e",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#0f0f1a"
+			}
+		},
+		{
+			"path": "pages/devices/devices",
+			"style": {
+				"navigationBarTitleText": "设备",
+				"navigationBarBackgroundColor": "#1a1a2e",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#0f0f1a"
+			}
+		},
+		{
+			"path": "pages/video/video",
+			"style": {
+				"navigationBarTitleText": "视频",
+				"navigationBarBackgroundColor": "#1a1a2e",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#0f0f1a"
+			}
+		},
+		{
+			"path": "pages/control/control",
+			"style": {
+				"navigationBarTitleText": "控制",
+				"navigationBarBackgroundColor": "#1a1a2e",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#0f0f1a"
+			}
+		},
+		{
+			"path": "pages/diagnostics/diagnostics",
+			"style": {
+				"navigationBarTitleText": "诊断",
+				"navigationBarBackgroundColor": "#1a1a2e",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#0f0f1a"
+			}
+		},
+		{
+			"path": "pages/about/about",
+			"style": {
+				"navigationBarTitleText": "关于",
+				"navigationBarBackgroundColor": "#1a1a2e",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#0f0f1a"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "无人机控制器",
+		"navigationBarBackgroundColor": "#1a1a2e",
+		"backgroundColor": "#0f0f1a"
+	}
+}

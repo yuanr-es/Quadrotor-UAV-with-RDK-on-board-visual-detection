@@ -1,0 +1,89 @@
+<template>
+	<view class="bp-panel">
+		<text class="bp-title">蓝牙连接</text>
+
+		<view class="bp-status">
+			<view class="bp-dot" :class="connected ? 'bp-on' : 'bp-off'"></view>
+			<text class="bp-status-text">{{ connected ? '已连接' : '未连接' }}</text>
+		</view>
+
+		<view v-if="connected" class="bp-device">
+			<text class="bp-device-name">{{ deviceName }}</text>
+			<text class="bp-device-mac">{{ deviceMac }}</text>
+		</view>
+
+		<view class="bp-btn" @tap="emit('toggle')">
+			<text class="bp-btn-text">{{ buttonText }}</text>
+		</view>
+
+		<text v-if="error.length > 0" class="bp-error">{{ error }}</text>
+
+		<slot></slot>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		connected: { type: Boolean, default: false },
+		deviceName: { type: String, default: '' },
+		deviceMac: { type: String, default: '' },
+		scanning: { type: Boolean, default: false },
+		error: { type: String, default: '' }
+	})
+
+	const emit = defineEmits(['toggle'])
+
+	const buttonText = computed((): string => {
+		if (props.connected) return '断开连接'
+		if (props.scanning) return '扫描中...'
+		return '扫描设备'
+	})
+</script>
+
+<style>
+	.bp-panel {
+		background-color: #1a1a2e;
+		border-radius: 6px;
+		padding: 10px;
+		flex-direction: column;
+	}
+
+	.bp-title {
+		font-size: 13px;
+		color: #00d4ff;
+		font-weight: bold;
+		padding-bottom: 6px;
+		margin-bottom: 6px;
+		border-bottom-width: 1px;
+		border-bottom-style: solid;
+		border-bottom-color: #2a2a4a;
+	}
+
+	.bp-status { flex-direction: row; align-items: center; margin-bottom: 8px; }
+
+	.bp-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 4px;
+		margin-right: 6px;
+	}
+
+	.bp-on { background-color: #23d160; }
+	.bp-off { background-color: #666666; }
+
+	.bp-status-text { font-size: 11px; color: #e0e0e0; }
+
+	.bp-device { flex-direction: column; margin-bottom: 8px; }
+	.bp-device-name { font-size: 11px; color: #e0e0e0; }
+	.bp-device-mac { font-size: 9px; color: #666666; }
+
+	.bp-btn {
+		background-color: #00d4ff;
+		border-radius: 6px;
+		padding: 8px;
+		align-items: center;
+	}
+	.bp-btn-text { font-size: 12px; color: #0f0f1a; font-weight: bold; }
+
+	.bp-error { font-size: 10px; color: #ff3860; margin-top: 6px; }
+</style>

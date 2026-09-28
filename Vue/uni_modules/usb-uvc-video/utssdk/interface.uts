@@ -1,0 +1,111 @@
+/**
+ * USB UVC 视频插件 —— 跨平台统一接口（UTS）
+ *
+ * 该文件只声明类型与接口，不包含平台实现。
+ * - Android 实现：./app-android/index.uts
+ * - HarmonyOS 实现：./app-harmony/index.uts
+ *
+ * 与 domain/video/adapter.ts 的 TypeScript 声明保持一致，
+ * 任何字段变更必须同步两处（参见 TODOList.md §3.3）。
+ */
+
+export type VideoFormat = 'MJPEG' | 'YUY2' | 'NV12' | 'H264' | 'H265' | 'UNKNOWN'
+
+export type UsbTransferType = 'isochronous' | 'bulk' | 'unknown'
+
+export type AdapterErrorCode =
+  | 'PLATFORM_UNSUPPORTED'
+  | 'DEVICE_NOT_FOUND'
+  | 'PERMISSION_DENIED'
+  | 'DEVICE_BUSY'
+  | 'FORMAT_UNSUPPORTED'
+  | 'STREAM_LOST'
+  | 'PROTOCOL_ERROR'
+  | 'UNKNOWN'
+
+export type UsbVideoDevice = {
+  deviceId : string
+  vendorId : number
+  productId : number
+  name : string
+  serial : string
+  interfaceClasses : number[]
+}
+
+export type VideoFormatCapability = {
+  format : VideoFormat
+  widths : number[]
+  heights : number[]
+  fps : number[]
+}
+
+export type VideoCapability = {
+  transferType : UsbTransferType
+  formats : VideoFormatCapability[]
+}
+
+export type VideoConfig = {
+  format : VideoFormat
+  width : number
+  height : number
+  fps : number
+  rotation : number
+  mirror : boolean
+}
+
+export type VideoStats = {
+  captureFps : number
+  renderFps : number
+  droppedFrames : number
+  decodeMs : number
+  queueDepth : number
+  lastFrameAt : number
+  usbErrors : number
+}
+
+export type AdapterError = {
+  code : AdapterErrorCode
+  message : string
+  sessionId : number
+}
+
+export type AttachedEvent = { sessionId : number, device : UsbVideoDevice }
+export type DetachedEvent = { sessionId : number, deviceId : string }
+export type PermissionResultEvent = { sessionId : number, granted : boolean }
+export type OpenedEvent = { sessionId : number, config : VideoConfig }
+export type StreamStartedEvent = { sessionId : number, config : VideoConfig }
+export type StatsEvent = { sessionId : number, stats : VideoStats }
+export type ErrorEvent = { sessionId : number, error : AdapterError }
+export type ClosedEvent = { sessionId : number, reason : string }
+
+/**
+ * 适配器接口。所有方法均异步；所有异步回调必须携带 sessionId，
+ * 避免旧会话回调污染新连接。close/release 必须幂等。
+ */
+export interface UsbVideoAdapter {
+  initialize() : Promise<void>
+  listDevices() : Promise<UsbVideoDevice[]>
+  requestPermission(deviceId : string) : Promise<boolean>
+  getCapability(deviceId : string) : Promise<VideoCapability>
+  open(deviceId : string, config : VideoConfig) : Promise<number>
+  startPreview(sessionId : number) : Promise<void>
+  stopPreview(sessionId : number) : Promise<void>
+  close(sessionId : number) : Promise<void>
+  getStats(sessionId : number) : VideoStats | null
+  onAttached(listener : (e : AttachedEvent) => void) : () => void
+  onDetached(listener : (e : DetachedEvent) => void) : () => void
+  onPermissionResult(listener : (e : PermissionResultEvent) => void) : () => void
+  onOpened(listener : (e : OpenedEvent) => void) : () => void
+  onStreamStarted(listener : (e : StreamStartedEvent) => void) : () => void
+  onStats(listener : (e : StatsEvent) => void) : () => void
+  onError(listener : (e : ErrorEvent) => void) : () => void
+  onClosed(listener : (e : ClosedEvent) => void) : () => void
+  release() : Promise<void>
+}
+
+/**
+ * 创建平台适配器实例。各平台 index.uts 必须导出此函数。
+ */
+export function createUsbVideoAdapter() : UsbVideoAdapter {
+  throw new Error('createUsbVideoAdapter 必须由平台实现 (app-android / app-harmony)')
+}

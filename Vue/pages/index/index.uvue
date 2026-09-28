@@ -1,0 +1,180 @@
+<template>
+	<view class="page">
+		<top-bar
+			:drone-name="droneName"
+			:flight-status="flightStatus"
+			:flight-time="flightTime"
+			:signal-strength="signalStrength"
+			:satellites="satellites"
+			:link-quality="linkQuality"
+		/>
+
+		<view class="nav">
+			<view class="nav-btn" @tap="goDevices"><text class="nav-text">设备</text></view>
+			<view class="nav-btn" @tap="goVideo"><text class="nav-text">视频</text></view>
+			<view class="nav-btn" @tap="goControl"><text class="nav-text">控制</text></view>
+			<view class="nav-btn" @tap="goDiagnostics"><text class="nav-text">诊断</text></view>
+			<view class="nav-btn" @tap="goAbout"><text class="nav-text">关于</text></view>
+		</view>
+
+		<view class="main">
+			<view v-if="connected" class="left">
+				<status-panel
+					:lat="lat"
+					:lng="lng"
+					:altitude="altitude"
+					:h-speed="hSpeed"
+					:v-speed="vSpeed"
+					:distance="distance"
+					:flight-mode="flightMode"
+					:imu-ok="imuOk"
+					:compass-ok="compassOk"
+					:battery="battery"
+					:voltage="voltage"
+					:remaining-time="remainingTime"
+				/>
+			</view>
+
+			<video-overlay
+				:status="videoStatus"
+				:resolution="resolution"
+				:fps="fps"
+				:is-recording="isRecording"
+				@track-rect="onTrackRect"
+			/>
+
+			<view class="right">
+				<bluetooth-panel
+					:connected="connected"
+					:device-name="deviceName"
+					:device-mac="deviceMac"
+					:scanning="scanning"
+					:error="btError"
+					@toggle="onBtToggle"
+				/>
+				<view v-if="connected" class="sticks">
+					<text class="sticks-title">模拟摇杆</text>
+					<joystick label="油门/偏航" channel-a="油门" channel-b="偏航" @change="onLeftStick" />
+					<joystick label="俯仰/横滚" channel-a="俯仰" channel-b="横滚" @change="onRightStick" />
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	// 说明：真实链路（USB 视频 / USB 遥测 / BLE）尚未接入，
+	// 页面只展示真实状态占位，不产生任何伪造飞行数据（见 TODOList §17）。
+	const connected = ref(false)
+	const droneName = ref('未连接设备')
+	const flightStatus = ref('disconnected')
+	const flightTime = ref('00:00:00')
+	const signalStrength = ref('--')
+	const satellites = ref('--')
+	const linkQuality = ref('--')
+
+	const videoStatus = ref('absent')
+	const resolution = ref('--')
+	const fps = ref('--')
+	const isRecording = ref(false)
+
+	const lat = ref('--')
+	const lng = ref('--')
+	const altitude = ref('--')
+	const hSpeed = ref('--')
+	const vSpeed = ref('--')
+	const distance = ref('--')
+	const flightMode = ref('--')
+	const imuOk = ref(false)
+	const compassOk = ref(false)
+	const battery = ref(0)
+	const voltage = ref('--')
+	const remainingTime = ref('--')
+
+	const deviceName = ref('')
+	const deviceMac = ref('')
+	const scanning = ref(false)
+	const btError = ref('')
+
+	onLoad(() => {
+		console.log('index onLoad')
+	})
+
+	const goDevices = () => uni.navigateTo({ url: '/pages/devices/devices' })
+	const goVideo = () => uni.navigateTo({ url: '/pages/video/video' })
+	const goControl = () => uni.navigateTo({ url: '/pages/control/control' })
+	const goDiagnostics = () => uni.navigateTo({ url: '/pages/diagnostics/diagnostics' })
+	const goAbout = () => uni.navigateTo({ url: '/pages/about/about' })
+
+	const onBtToggle = () => {
+		uni.showToast({ title: 'BLE 控制链路待接入（§8）', icon: 'none' })
+	}
+
+	const onLeftStick = (pos: any) => {
+		console.log('left stick', pos)
+	}
+	const onRightStick = (pos: any) => {
+		console.log('right stick', pos)
+	}
+
+	const onTrackRect = (rect: any) => {
+		console.log('track rect', rect)
+		uni.showToast({ title: '框选已记录，控制链路待接入', icon: 'none' })
+	}
+</script>
+
+<style>
+	.page {
+		flex: 1;
+		flex-direction: column;
+		background-color: #0f0f1a;
+	}
+
+	.nav {
+		flex-direction: row;
+		background-color: #141428;
+		padding: 6px;
+	}
+
+	.nav-btn {
+		flex: 1;
+		align-items: center;
+		padding: 6px;
+		background-color: #1a1a2e;
+		border-radius: 6px;
+		margin-left: 3px;
+		margin-right: 3px;
+	}
+
+	.nav-text { font-size: 12px; color: #00d4ff; }
+
+	.main {
+		flex: 1;
+		flex-direction: row;
+		padding: 6px;
+	}
+
+	.left { width: 180px; margin-right: 6px; }
+
+	.right {
+		width: 180px;
+		margin-left: 6px;
+		flex-direction: column;
+	}
+
+	.sticks {
+		flex: 1;
+		margin-top: 8px;
+		background-color: #1a1a2e;
+		border-radius: 6px;
+		padding: 8px;
+		flex-direction: column;
+	}
+
+	.sticks-title {
+		font-size: 13px;
+		color: #00d4ff;
+		font-weight: bold;
+		margin-bottom: 6px;
+	}
+</style>

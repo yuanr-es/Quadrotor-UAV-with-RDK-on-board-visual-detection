@@ -1,0 +1,47 @@
+<template>
+	<view class="vp-page">
+		<video-overlay
+			:status="videoStatus"
+			:resolution="resolution"
+			:fps="fps"
+			:is-recording="isRecording"
+			@track-rect="onTrackRect"
+		/>
+		<view class="vp-info">
+			<text class="vp-info-text">视频链路：{{ videoStatus }}</text>
+			<text class="vp-info-text">分辨率：{{ resolution }} · {{ fps }}fps</text>
+			<text class="vp-info-text">说明：UVC 原生组件待接入（uni_modules/usb-uvc-video）</text>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const videoStatus = ref('absent')
+	const resolution = ref('--')
+	const fps = ref('--')
+	const isRecording = ref(false)
+
+	const onTrackRect = (rect: any) => {
+		console.log('track rect', rect)
+		uni.showToast({ title: '框选已记录，控制链路待接入', icon: 'none' })
+	}
+</script>
+
+<style>
+	.vp-page {
+		flex: 1;
+		flex-direction: column;
+		background-color: #0f0f1a;
+	}
+
+	.vp-info {
+		padding: 10px;
+		flex-direction: column;
+	}
+
+	.vp-info-text {
+		font-size: 11px;
+		color: #888888;
+		margin-bottom: 4px;
+	}
+</style>

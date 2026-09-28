@@ -1,0 +1,73 @@
+<template>
+	<view class="dp-page">
+		<view class="dp-section">
+			<text class="dp-title">USB 视频设备</text>
+			<text class="dp-empty">未发现设备</text>
+			<view class="dp-btn" @tap="refreshUsb"><text class="dp-btn-text">刷新 USB 设备</text></view>
+		</view>
+
+		<view class="dp-section">
+			<text class="dp-title">USB 遥测</text>
+			<text class="dp-empty">未发现设备</text>
+		</view>
+
+		<view class="dp-section">
+			<text class="dp-title">BLE 控制</text>
+			<text class="dp-empty">未发现设备</text>
+			<view class="dp-btn" @tap="scanBle"><text class="dp-btn-text">扫描蓝牙</text></view>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	onLoad(() => {
+		console.log('devices onLoad')
+	})
+
+	const refreshUsb = () => {
+		uni.showToast({ title: 'USB 枚举待接入（§5.2）', icon: 'none' })
+	}
+
+	const scanBle = () => {
+		uni.showToast({ title: 'BLE 服务待接入（§8）', icon: 'none' })
+	}
+</script>
+
+<style>
+	.dp-page {
+		flex: 1;
+		flex-direction: column;
+		background-color: #0f0f1a;
+		padding: 10px;
+	}
+
+	.dp-section {
+		background-color: #1a1a2e;
+		border-radius: 6px;
+		padding: 12px;
+		margin-bottom: 10px;
+		flex-direction: column;
+	}
+
+	.dp-title {
+		font-size: 14px;
+		color: #00d4ff;
+		font-weight: bold;
+		margin-bottom: 8px;
+	}
+
+	.dp-empty {
+		font-size: 12px;
+		color: #555555;
+		margin-bottom: 10px;
+	}
+
+	.dp-btn {
+		background-color: #00d4ff;
+		border-radius: 6px;
+		padding: 8px;
+		align-items: center;
+	}
+
+	.dp-btn-text { font-size: 12px; color: #0f0f1a; font-weight: bold; }
+</style>

@@ -1,0 +1,17 @@
+{
+  "name": "drone-controller",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "无人机地面控制端（uni-app x 工程）。package.json 仅用于单元测试工具链，不参与 App 构建。",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.9"
+  }
+}

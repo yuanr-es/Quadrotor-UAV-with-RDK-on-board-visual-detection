@@ -1,0 +1,129 @@
+<template>
+	<view class="js-row">
+		<text class="js-label">{{ label }}</text>
+		<view
+			:id="areaId"
+			class="js-area"
+			@touchstart="onStart"
+			@touchmove="onMove"
+			@touchend="onEnd"
+			@touchcancel="onEnd"
+		>
+			<view class="js-knob" :style="knobStyle"></view>
+			<view class="js-cross-h"></view>
+			<view class="js-cross-v"></view>
+		</view>
+		<view class="js-values">
+			<text class="js-value">{{ channelA }}: {{ valueA }}%</text>
+			<text class="js-value">{{ channelB }}: {{ valueB }}%</text>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		label: { type: String, default: '摇杆' },
+		channelA: { type: String, default: 'CH1' },
+		channelB: { type: String, default: 'CH2' }
+	})
+
+	const emit = defineEmits(['change'])
+
+	const areaId = 'js-area-' + Math.floor(Math.random() * 1000000).toString()
+	const posX = ref(50)
+	const posY = ref(50)
+	const leftPx = ref(0)
+	const topPx = ref(0)
+	const boxW = ref(1)
+	const boxH = ref(1)
+
+	const knobStyle = computed((): string => {
+		return `left:${posX.value}%;top:${posY.value}%;`
+	})
+
+	// 通道值：A 通道取纵向（上=100），B 通道取横向（右=100）
+	const valueA = computed((): number => Math.round(100 - posY.value))
+	const valueB = computed((): number => Math.round(posX.value))
+
+	onReady(() => {
+		uni.createSelectorQuery().select('#' + areaId).boundingClientRect((res: any) => {
+			if (res != null) {
+				leftPx.value = res.left as number
+				topPx.value = res.top as number
+				boxW.value = res.width as number
+				boxH.value = res.height as number
+			}
+		}).exec()
+	})
+
+	const update = (e: any) => {
+		const t = e.touches[0]
+		if (t == null) return
+		let px = ((t.clientX - leftPx.value) / boxW.value) * 100
+		let py = ((t.clientY - topPx.value) / boxH.value) * 100
+		px = Math.max(5, Math.min(95, px))
+		py = Math.max(5, Math.min(95, py))
+		posX.value = Math.round(px)
+		posY.value = Math.round(py)
+		emit('change', { x: posX.value, y: posY.value })
+	}
+
+	const onStart = (e: any) => update(e)
+	const onMove = (e: any) => update(e)
+	const onEnd = () => {
+		posX.value = 50
+		posY.value = 50
+		emit('change', { x: 50, y: 50 })
+	}
+</script>
+
+<style>
+	.js-row {
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 8px;
+	}
+
+	.js-label { font-size: 10px; color: #888888; margin-bottom: 3px; }
+
+	.js-area {
+		width: 90px;
+		height: 90px;
+		background-color: #0f0f1a;
+		border-width: 2px;
+		border-style: solid;
+		border-color: #2a2a4a;
+		border-radius: 45px;
+	}
+
+	.js-knob {
+		position: absolute;
+		width: 28px;
+		height: 28px;
+		background-color: #00d4ff;
+		border-radius: 14px;
+		margin-left: -14px;
+		margin-top: -14px;
+	}
+
+	.js-cross-h {
+		position: absolute;
+		left: 10%;
+		right: 10%;
+		top: 45px;
+		height: 1px;
+		background-color: #2a2a4a;
+	}
+
+	.js-cross-v {
+		position: absolute;
+		top: 10%;
+		bottom: 10%;
+		left: 45px;
+		width: 1px;
+		background-color: #2a2a4a;
+	}
+
+	.js-values { flex-direction: row; margin-top: 3px; }
+	.js-value { font-size: 10px; color: #888888; margin-left: 6px; margin-right: 6px; }
+</style>

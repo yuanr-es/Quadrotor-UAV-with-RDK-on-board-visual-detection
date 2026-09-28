@@ -1,0 +1,24 @@
+{
+  "id": "usb-uvc-video",
+  "displayName": "USB UVC 视频",
+  "version": "0.1.0",
+  "description": "Android/HarmonyOS USB UVC 摄像头枚举、授权、打开与预览的统一 UTS 接口（平台实现分离）。",
+  "keywords": ["usb", "uvc", "camera", "video"],
+  "dcloudext": {
+    "type": "uts",
+    "sale": { "regular": { "price": "0.00" } }
+  },
+  "uni_modules": {
+    "dependencies": [],
+    "encrypt": [],
+    "platforms": {
+      "cloud": { "tcb": "n", "aliyun": "n" },
+      "client": {
+        "App": { "app-vue": "n", "app-nvue": "n", "app-uvue": "y" },
+        "H5-mobile": { "Safari": "n", "Android Browser": "n" },
+        "小程序": {},
+        "快应用": {}
+      }
+    }
+  }
+}

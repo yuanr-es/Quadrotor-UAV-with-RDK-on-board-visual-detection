@@ -1,0 +1,38 @@
+<template>
+	<view class="sc-row">
+		<text class="sc-label">{{ label }}</text>
+		<text class="sc-value" :class="toneClass">{{ value }}</text>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		label: { type: String, default: '' },
+		value: { type: String, default: '--' },
+		tone: { type: String, default: 'normal' }
+	})
+
+	const toneClass = computed((): string => {
+		if (props.tone == 'ok') return 'sc-value-ok'
+		if (props.tone == 'warn') return 'sc-value-warn'
+		if (props.tone == 'danger') return 'sc-value-danger'
+		return 'sc-value-normal'
+	})
+</script>
+
+<style>
+	.sc-row {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 5px;
+	}
+
+	.sc-label { font-size: 11px; color: #888888; }
+
+	.sc-value { font-size: 12px; font-weight: bold; }
+	.sc-value-normal { color: #e0e0e0; }
+	.sc-value-ok { color: #23d160; }
+	.sc-value-warn { color: #ffdd57; }
+	.sc-value-danger { color: #ff3860; }
+</style>

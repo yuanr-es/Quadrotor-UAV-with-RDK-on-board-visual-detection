@@ -1,0 +1,65 @@
+<template>
+	<view class="sp-panel">
+		<text class="sp-title">遥测状态</text>
+		<status-card label="GPS" :value="gpsText" />
+		<status-card label="高度" :value="altitude" />
+		<status-card label="水平速度" :value="hSpeed" />
+		<status-card label="垂直速度" :value="vSpeed" />
+		<status-card label="距离" :value="distance" />
+		<status-card label="飞行模式" :value="flightMode" />
+		<status-card label="IMU" :value="imuText" :tone="imuOk ? 'ok' : 'danger'" />
+		<status-card label="罗盘" :value="compassText" :tone="compassOk ? 'ok' : 'danger'" />
+		<status-card label="电量" :value="batteryText" :tone="batteryTone" />
+		<status-card label="电压" :value="voltage" />
+		<status-card label="剩余" :value="remainingText" />
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		lat: { type: String, default: '--' },
+		lng: { type: String, default: '--' },
+		altitude: { type: String, default: '--' },
+		hSpeed: { type: String, default: '--' },
+		vSpeed: { type: String, default: '--' },
+		distance: { type: String, default: '--' },
+		flightMode: { type: String, default: '--' },
+		imuOk: { type: Boolean, default: false },
+		compassOk: { type: Boolean, default: false },
+		battery: { type: Number, default: 0 },
+		voltage: { type: String, default: '--' },
+		remainingTime: { type: String, default: '--' }
+	})
+
+	const gpsText = computed((): string => `${props.lat} / ${props.lng}`)
+	const imuText = computed((): string => props.imuOk ? '正常' : '异常')
+	const compassText = computed((): string => props.compassOk ? '正常' : '异常')
+	const batteryText = computed((): string => `${props.battery}%`)
+	const batteryTone = computed((): string => {
+		if (props.battery <= 15) return 'danger'
+		if (props.battery <= 30) return 'warn'
+		return 'ok'
+	})
+	const remainingText = computed((): string => `${props.remainingTime} 分`)
+</script>
+
+<style>
+	.sp-panel {
+		width: 100%;
+		background-color: #1a1a2e;
+		border-radius: 6px;
+		padding: 10px;
+		flex-direction: column;
+	}
+
+	.sp-title {
+		font-size: 13px;
+		color: #00d4ff;
+		font-weight: bold;
+		padding-bottom: 6px;
+		margin-bottom: 6px;
+		border-bottom-width: 1px;
+		border-bottom-style: solid;
+		border-bottom-color: #2a2a4a;
+	}
+</style>

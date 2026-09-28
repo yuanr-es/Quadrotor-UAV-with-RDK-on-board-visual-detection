@@ -1,0 +1,106 @@
+<template>
+	<view class="tb-bar">
+		<view class="tb-left">
+			<text class="tb-name">{{ droneName }}</text>
+			<text class="tb-status" :class="statusClass">{{ statusText }}</text>
+		</view>
+		<view class="tb-center">
+			<text class="tb-signal">信号 {{ signalStrength }}</text>
+			<text class="tb-signal">卫星 {{ satellites }}</text>
+			<text class="tb-signal">链路 {{ linkQuality }}</text>
+		</view>
+		<view class="tb-right">
+			<text class="tb-time-label">飞行时间</text>
+			<text class="tb-time-value">{{ flightTime }}</text>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		droneName: { type: String, default: '无人机' },
+		flightStatus: { type: String, default: 'disconnected' },
+		flightTime: { type: String, default: '00:00:00' },
+		signalStrength: { type: String, default: '--' },
+		satellites: { type: String, default: '--' },
+		linkQuality: { type: String, default: '--' }
+	})
+
+	const statusText = computed((): string => {
+		if (props.flightStatus == 'flying') return '飞行中'
+		if (props.flightStatus == 'landed') return '已降落'
+		if (props.flightStatus == 'rth') return '返航中'
+		return '已断开'
+	})
+
+	const statusClass = computed((): string => {
+		if (props.flightStatus == 'flying') return 'tb-status-flying'
+		if (props.flightStatus == 'landed') return 'tb-status-landed'
+		if (props.flightStatus == 'rth') return 'tb-status-rth'
+		return 'tb-status-off'
+	})
+</script>
+
+<style>
+	.tb-bar {
+		height: 44px;
+		background-color: #1a1a2e;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding-left: 12px;
+		padding-right: 12px;
+		border-bottom-width: 1px;
+		border-bottom-style: solid;
+		border-bottom-color: #2a2a4a;
+	}
+
+	.tb-left {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.tb-name {
+		font-size: 14px;
+		color: #e0e0e0;
+		font-weight: bold;
+		margin-right: 8px;
+	}
+
+	.tb-status {
+		font-size: 11px;
+		color: #ffffff;
+		padding-left: 8px;
+		padding-right: 8px;
+		padding-top: 2px;
+		padding-bottom: 2px;
+		border-radius: 10px;
+	}
+
+	.tb-status-flying { background-color: #23d160; }
+	.tb-status-landed { background-color: #888888; }
+	.tb-status-rth { background-color: #ffdd57; color: #1a1a2e; }
+	.tb-status-off { background-color: #ff3860; }
+
+	.tb-center {
+		flex: 1;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.tb-signal {
+		font-size: 11px;
+		color: #00d4ff;
+		margin-left: 8px;
+		margin-right: 8px;
+	}
+
+	.tb-right {
+		flex-direction: column;
+		align-items: flex-end;
+	}
+
+	.tb-time-label { font-size: 9px; color: #888888; }
+	.tb-time-value { font-size: 14px; color: #00d4ff; font-weight: bold; }
+</style>

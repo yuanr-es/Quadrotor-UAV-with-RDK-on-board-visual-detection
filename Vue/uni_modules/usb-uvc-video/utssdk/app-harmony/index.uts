@@ -1,0 +1,67 @@
+/**
+ * HarmonyOS 平台 USB UVC 适配器 —— 实现骨架
+ *
+ * 状态：**未实现**。HarmonyOS NEXT 不能复用 Android AAR/SO 后假定可用，
+ * 必须提供 ArkTS 实现（参见 TODOList.md §11.2）。
+ * 所有方法在完成鸿蒙 POC 前必须显式抛错，不得返回假数据。
+ *
+ * TODO(§11.2) DevEco Studio + 证书 + HAP 构建基线
+ * TODO(§11.2) 鸿蒙 USB Host / 设备授权 / 端点传输能力调研与 POC
+ * TODO(§11.2) 外接 UVC 格式协商 + 帧获取 + 解码/渲染
+ * TODO(§11.2) ArkTS 原生嵌入组件承载画面 + 与 Vue OSD 同层叠加
+ * TODO(§11.2) 蓝牙权限/发现/GATT/生命周期重写
+ *
+ * 范围风险：若系统公开能力无法满足目标 UVC 设备，需厂商 HAR/SDK，
+ * 或将该硬件范围正式限制为「仅 Android」。
+ */
+
+import {
+  AdapterError,
+  AttachedEvent,
+  ClosedEvent,
+  DetachedEvent,
+  ErrorEvent,
+  OpenedEvent,
+  PermissionResultEvent,
+  StatsEvent,
+  StreamStartedEvent,
+  UsbVideoAdapter,
+  UsbVideoDevice,
+  VideoCapability,
+  VideoConfig,
+  VideoStats
+} from '../interface.uts'
+
+function notImplemented(method : string) : Error {
+  return new Error(
+    `[usb-uvc-video:harmony] ${method} 尚未实现。` +
+    `请先完成 TODOList.md §11.2 的鸿蒙 UVC POC。`
+  )
+}
+
+export class HarmonyUsbVideoAdapter implements UsbVideoAdapter {
+  initialize() : Promise<void> { return Promise.reject(notImplemented('initialize')) }
+  listDevices() : Promise<UsbVideoDevice[]> { return Promise.reject(notImplemented('listDevices')) }
+  requestPermission(deviceId : string) : Promise<boolean> { return Promise.reject(notImplemented('requestPermission')) }
+  getCapability(deviceId : string) : Promise<VideoCapability> { return Promise.reject(notImplemented('getCapability')) }
+  open(deviceId : string, config : VideoConfig) : Promise<number> { return Promise.reject(notImplemented('open')) }
+  startPreview(sessionId : number) : Promise<void> { return Promise.reject(notImplemented('startPreview')) }
+  stopPreview(sessionId : number) : Promise<void> { return Promise.reject(notImplemented('stopPreview')) }
+  close(sessionId : number) : Promise<void> { return Promise.reject(notImplemented('close')) }
+  getStats(sessionId : number) : VideoStats | null { return null }
+
+  onAttached(listener : (e : AttachedEvent) => void) : () => void { return () => {} }
+  onDetached(listener : (e : DetachedEvent) => void) : () => void { return () => {} }
+  onPermissionResult(listener : (e : PermissionResultEvent) => void) : () => void { return () => {} }
+  onOpened(listener : (e : OpenedEvent) => void) : () => void { return () => {} }
+  onStreamStarted(listener : (e : StreamStartedEvent) => void) : () => void { return () => {} }
+  onStats(listener : (e : StatsEvent) => void) : () => void { return () => {} }
+  onError(listener : (e : ErrorEvent) => void) : () => void { return () => {} }
+  onClosed(listener : (e : ClosedEvent) => void) : () => void { return () => {} }
+
+  release() : Promise<void> { return Promise.resolve() }
+}
+
+export function createUsbVideoAdapter() : UsbVideoAdapter {
+  return new HarmonyUsbVideoAdapter()
+}
