@@ -1,0 +1,12 @@
+1.flight_hal_new\port.o: FreeRTOS\portable\port.c
+1.flight_hal_new\port.o: ./FreeRTOS/include/FreeRTOS.h
+1.flight_hal_new\port.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stddef.h
+1.flight_hal_new\port.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+1.flight_hal_new\port.o: ./FreeRTOS/FreeRTOSConfig.h
+1.flight_hal_new\port.o: ./FreeRTOS/include/projdefs.h
+1.flight_hal_new\port.o: ./FreeRTOS/include/portable.h
+1.flight_hal_new\port.o: ./FreeRTOS/include/deprecated_definitions.h
+1.flight_hal_new\port.o: ./FreeRTOS/portable/portmacro.h
+1.flight_hal_new\port.o: ./FreeRTOS/include/mpu_wrappers.h
+1.flight_hal_new\port.o: ./FreeRTOS/include/task.h
+1.flight_hal_new\port.o: ./FreeRTOS/include/list.h

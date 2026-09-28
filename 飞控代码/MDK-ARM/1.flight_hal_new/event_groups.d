@@ -1,0 +1,15 @@
+1.flight_hal_new\event_groups.o: FreeRTOS\event_groups.c
+1.flight_hal_new\event_groups.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/FreeRTOS.h
+1.flight_hal_new\event_groups.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stddef.h
+1.flight_hal_new\event_groups.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/FreeRTOSConfig.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/projdefs.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/portable.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/deprecated_definitions.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/portable/portmacro.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/mpu_wrappers.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/task.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/list.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/timers.h
+1.flight_hal_new\event_groups.o: ./FreeRTOS/include/event_groups.h

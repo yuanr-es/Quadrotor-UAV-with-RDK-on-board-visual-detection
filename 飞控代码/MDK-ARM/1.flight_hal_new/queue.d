@@ -1,0 +1,15 @@
+1.flight_hal_new\queue.o: FreeRTOS\queue.c
+1.flight_hal_new\queue.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+1.flight_hal_new\queue.o: D:\Keil5\ARM\ARMCC\Bin\..\include\string.h
+1.flight_hal_new\queue.o: ./FreeRTOS/include/FreeRTOS.h
+1.flight_hal_new\queue.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stddef.h
+1.flight_hal_new\queue.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+1.flight_hal_new\queue.o: ./FreeRTOS/FreeRTOSConfig.h
+1.flight_hal_new\queue.o: ./FreeRTOS/include/projdefs.h
+1.flight_hal_new\queue.o: ./FreeRTOS/include/portable.h
+1.flight_hal_new\queue.o: ./FreeRTOS/include/deprecated_definitions.h
+1.flight_hal_new\queue.o: ./FreeRTOS/portable/portmacro.h
+1.flight_hal_new\queue.o: ./FreeRTOS/include/mpu_wrappers.h
+1.flight_hal_new\queue.o: ./FreeRTOS/include/task.h
+1.flight_hal_new\queue.o: ./FreeRTOS/include/list.h
+1.flight_hal_new\queue.o: ./FreeRTOS/include/queue.h
